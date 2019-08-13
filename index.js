@@ -4,9 +4,9 @@ const cors = require('cors');
 const morgan = require('morgan');
 const redis = require('redis');
 const RedisStore = require('connect-redis')(session);
+const mongoose = require('mongoose');
 require('dotenv').config()
 
-const users = require('./consts');
 
 const app = express();
 const client = redis.createClient();
@@ -33,7 +33,7 @@ app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const riderectLogin = (req, res, next) => {
+/*const riderectLogin = (req, res, next) => {
   if (!req.session.userId) {
     res.redirect('/login');
   } else {
@@ -157,7 +157,15 @@ app.post('/logout', riderectLogin, (req, res) => {
   });
   res.clearCookie(process.env.SESS_NAME);
   res.redirect('/');
-});
+});*/
+
+mongoose.connect(process.env.MONGODB_URI,  { useNewUrlParser: true });
+//mongoose.set('debug', true);
+
+
+require('./models/User');
+
+app.use(require('./routes'));
 
 /*app.use((req, res, next) => {
   const err = new Error('Not Found');
