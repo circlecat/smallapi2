@@ -1,0 +1,25 @@
+{
+  "name": "smallapi2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "dev": "nodemon ./index.js",
+    "stop": "lsof -ti :3000 | xargs kill"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "connect-redis": "^3.4.2",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2",
+    "mongoose": "^5.6.9",
+    "morgan": "^1.9.1",
+    "redis": "^2.8.0"
+  }
+}
