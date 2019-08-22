@@ -20,22 +20,27 @@ const UserSchema = new mongoose.Schema({
     match: [/\S+@\S+\.\S+/, 'is invalid'], 
     index: true
   },
-  hash: String,
-  salt: String
+  hash: {
+    type: String,
+    required: true
+  },
+  salt: {
+    type: String, 
+    required: true
+  }
 }, { timestamps: true });
 
 UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 
-const pbkdf2 = util.promisify(crypto.pbkdf2).bind(crypto);
-
-UserSchema.methods.validPassword = (password) => {
-  const hash = crypto.pbkdf2(password, this.salt, 1000, 512, 'sha512').toString('hex');
+UserSchema.methods.validPassword = async (password) => {
+  const hash = pbkdf2Sync(password, this.salt, 1000, 512, 'sha512').toString('hex');
   return this.hash === hash;
 }
 
-UserSchema.methods.setPassword = async (password) => {
+UserSchema.methods.setPassword =  password => {
   this.salt = crypto.randomBytes(16).toString('hex');
-  this.hash = await pbkdf2(password, this.salt, 1000, 512, 'sha512').toString('hex');
+  this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+  return this;
 }
 
 mongoose.model('User', UserSchema);

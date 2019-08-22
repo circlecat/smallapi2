@@ -174,10 +174,8 @@ app.use(require('./routes'));
 });*/
 
 app.use((err, req, res, next) => {
-  console.log(err.stack);
-
   res.status(err.status || 500);
-
+  console.log(err.stack);
   res.json({'errors': {
     message: err.message,
     error: err
