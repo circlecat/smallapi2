@@ -15,7 +15,7 @@ const redisStore = new RedisStore({
   host: 'localhost', 
   port: 6379, 
   client: client, 
-  ttl: 60*60*10 
+  ttl: 60*60*60*10 
  });
 
 app.use(cors());
@@ -159,7 +159,7 @@ app.post('/logout', riderectLogin, (req, res) => {
   res.redirect('/');
 });*/
 
-mongoose.connect(process.env.MONGODB_URI,  { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://user:RXeTlRcbYt7CBxhs@cluster0-bipcn.mongodb.net/test?retryWrites=true&w=majority',  { useNewUrlParser: true });
 //mongoose.set('debug', true);
 
 
