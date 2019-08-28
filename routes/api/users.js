@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
-const User = mongoose.model('User');
+const User = require('../../models/User');
 const util = require('util');
 
 const isAlreadyLogIn = (req, res, next) => {
@@ -22,10 +22,9 @@ router.post('/users/login', isAlreadyLogIn, async (req, res, next) => {
     return res.status(422).json({errors: {password: "can't be blank"}});
   }
 
-  const findOne = util.promisify(User.findOne).bind(User);
-
   try {
     user = await User.findOne({ email });
+
     if(!user) {
       return res.status(401).json({errors: {error: 'Email or password is incorrect'}});
     }
@@ -38,7 +37,6 @@ router.post('/users/login', isAlreadyLogIn, async (req, res, next) => {
     return res.status(200).json({ user: { username: user.username, email: user.email } })
 
   } catch (error) {
-    console.log(1);
     next(error);
   }
 });
@@ -75,9 +73,8 @@ router.put('/users', async (req, res, next) => {
     return res.status(401).send()
   }
   
-  const findById = util.promisify(User.findById).bind(User);
   try {
-    const user = await findById(req.session.userId);
+    const user = await User.findById(req.session.userId);
 
     if (!user) {
       return res.status(401);
@@ -109,10 +106,8 @@ router.delete('/users', async (req, res, next) => {
     return res.status(401).send()
   }
 
-  const findById = util.promisify(User.findById).bind(User);
-  const findByIdAdnDelete = util.promisify(User.findByIdAndDelete).bind(User);
   try {
-    const user = await findById(req.session.userId);
+    const user = await User.findById(req.session.userId);
     
     if(!user) {
       return res.status(401).send();

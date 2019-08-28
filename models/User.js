@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const crypto = require('crypto');
 const util = require('util');
+//const Todo = require('./Todo');
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -46,9 +47,9 @@ UserSchema.methods.userToJSON = function() {
   return {
     user: {
       username: this.username,
-      email: this.email
+      email: this.email,
     }
   }
 }
 
-mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);
