@@ -11,6 +11,19 @@ const isAlreadyLogIn = (req, res, next) => {
   }
 }
 
+router.get('/user', async (req, res, next) => {
+  if (!req.session.userId) {
+    return res.status(401).end();
+  }
+
+  try {
+    const user = await User.findById(req.session.userId);
+    return res.status(200).json(user.userToJSON());
+  } catch (error) {
+    next(error);
+  }
+})
+
 router.post('/users/login', isAlreadyLogIn, async (req, res, next) => {
   const { email, password } = req.body;
 

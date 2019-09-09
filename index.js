@@ -11,21 +11,30 @@ require('dotenv').config()
 const app = express();
 const client = redis.createClient();
 
+const corsOptions = {
+  credentials: true,
+  origin: 'http://localhost:3000' // only for debug
+}
+
 const redisStore = new RedisStore({ 
   host: 'localhost', 
   port: 6379, 
   client: client, 
-  ttl: process.env.TWO_HOURS
  });
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(session({
   name: process.env.SESS_NAME,
   resave: false,
   saveUninitialized: false,
   secret: process.env.SESS_SECRET,
-  store: redisStore
+  store: redisStore,
+  cookie: {
+    httpOnly: true,
+    maxAge: 7200000,
+    // secure: true // only on prodaction
+  }
 }))
 
 app.use(morgan('dev'));
@@ -37,9 +46,6 @@ mongoose.connect('mongodb+srv://user:RXeTlRcbYt7CBxhs@cluster0-bipcn.mongodb.net
   { useNewUrlParser: true })
   .then(() => console.log('New connection to mongo'))
   .catch((err) => console.log('Smth went wrong', err));
-//mongoose.set('debug', true);
-
-//require('./models/User');
 
 app.use(require('./routes'));
 
